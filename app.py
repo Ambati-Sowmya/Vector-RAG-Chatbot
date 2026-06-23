@@ -37,6 +37,8 @@ with st.sidebar:
                     try:
                         # Process and store the document
                         chunks_added = process_and_store_document(tmp_path)
+                                                if chunks_added == 0:
+                            st.warning(f"Warning: No extractable text found in '{uploaded_file.name}'. It might be a scanned image.")
                         total_chunks += chunks_added
                     finally:
                         # Clean up the temporary file

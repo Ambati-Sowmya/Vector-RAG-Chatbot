@@ -37,7 +37,9 @@ def process_and_store_document(file_path: str):
         is_separator_regex=False,
     )
     chunks = text_splitter.split_documents(documents)
-    
+        # If the PDF has no extractable text (e.g., scanned image), return early
+    if not chunks:
+        return 0
     # 3. Store in ChromaDB
     db = Chroma.from_documents(
         chunks, 

@@ -7,7 +7,7 @@ from vector_store import process_and_store_document, clear_database, answer_ques
 st.set_page_config(page_title="AI Document Chatbot", page_icon="🤖", layout="centered")
 
 st.title("🤖 AI Document Chatbot")
-st.markdown("Upload a PDF document and ask questions about it. The AI will search the document and generate an answer using **Vector Embeddings** and **Llama 3 (via Groq)**.")
+st.markdown("Upload a PDF document and ask questions about it. The AI will search the document and generate an answer using **Vector Embeddings** and **GPT OSS (via Groq)**.")
 
 # Initialize session state for chat history
 if "messages" not in st.session_state:
@@ -40,11 +40,16 @@ with st.sidebar:
                         if chunks_added == 0:
                             st.warning(f"Warning: No extractable text found in '{uploaded_file.name}'. It might be a scanned image.")
                         total_chunks += chunks_added
+                    except Exception as e:
+                        st.error(f"Failed to process '{uploaded_file.name}': {str(e)}")
                     finally:
                         # Clean up the temporary file
                         os.unlink(tmp_path)
                 
-                st.success(f"Successfully added {total_chunks} text chunks to the database!")
+                if total_chunks > 0:
+                    st.success(f"Successfully added {total_chunks} text chunks to the database!")
+                else:
+                    st.error("No valid text could be extracted from the uploaded document(s).")
         else:
             st.warning("Please upload at least one document first.")
             

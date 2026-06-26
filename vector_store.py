@@ -14,7 +14,7 @@ load_dotenv()
 # Configuration
 CHROMA_PATH = "chroma_db"
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-LLM_MODEL = "llama-3.1-8b-instant"
+LLM_MODEL = "gpt-oss-20b"
 
 def get_embeddings():
     """Initialize and return the HuggingFace embeddings model."""
@@ -37,9 +37,11 @@ def process_and_store_document(file_path: str):
         is_separator_regex=False,
     )
     chunks = text_splitter.split_documents(documents)
-        # If the PDF has no extractable text (e.g., scanned image), return early
+    
+    # If the PDF has no extractable text (e.g., scanned image), return early
     if not chunks:
         return 0
+    
     # 3. Store in ChromaDB
     db = Chroma.from_documents(
         chunks, 
